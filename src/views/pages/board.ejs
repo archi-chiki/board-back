@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="body">
+  <!-- Header -->
+  <%- include('../partials/header') %>
+
+    <!-- 게시글 목록 -->
+    <section class="board-content">
+      <!-- 글쓰기 버튼 -->
+      <div class="board-header">
+        <h2>게시판</h2>
+        <a href="/board/write">
+          <button class="function-btn write">글쓰기</button>
+        </a>
+      </div>
+
+      <!-- 게시글 목록 -->
+      <table class="board-table">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>날짜</th>
+            <th>조회수</th>
+            <th>추천수</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% postData.forEach(post=> { %>
+            <tr>
+              <td>
+                <%= post.id %>
+              </td>
+              <td><a href="/board/<%= post.id %>">
+                  <%= post.subject %>
+                </a></td>
+              <td>
+                <%= post.author.name %>
+              </td>
+              <td>
+                <%= post.createdAt %>
+              </td>
+              <td>
+                <%= post.views %>
+              </td>
+              <td>
+                <%= post.likes %>
+              </td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+
+    </section>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+</body>
+
+</html>

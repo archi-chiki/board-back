@@ -1,0 +1,260 @@
+/* 기본 스타일 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+}
+
+/* .board-content {
+  display: flex;
+  flex-direction: column;
+} */
+
+header {
+  background-color: #008cba; /* 상단 네비게이션 바 색상 */
+  color: white;
+  height: 200px;
+  padding: 10px 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 살짝 그림자 효과 */
+}
+
+header .logo {
+  display: flex;
+  justify-content: center; /* 링크들을 중앙 정렬 */
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 0.8rem;
+  /* position: fixed; */
+  bottom: 0;
+  width: 100%;
+}
+
+a {
+  color: #333;
+  font-weight: bold; /* 굵은 글씨 */
+  text-decoration: none; /* 밑줄 제거 */ 
+}
+
+a:hover {
+  color: gray;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center; /* 링크들을 중앙 정렬 */
+  gap: 80px; /* 링크들 간의 간격 */
+  flex-grow: 1; /* nav-links가 가능한 공간을 차지하도록 설정 */
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.nav-links a:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* 마우스 오버 시 배경색 변경 */
+}
+
+/* 게시판 컨텐츠 */
+.board-header {
+  display: flex;
+  justify-content: space-between; /* 요소를 양쪽으로 배치 */
+  align-items: center; /* 세로 중앙 정렬 */
+  padding: 0 20px; /* 좌우에 20px의 내부 여백 추가 */
+}
+
+.function-btn {
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.write {
+  background-color: #007bff;
+}
+
+.modify {
+  background-color: #f6d52e;
+}
+
+.delete {
+  background-color: #EB0000;
+}
+
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.board-table th, .board-table td {
+  border: solid thin #ddd;
+  padding: .5rem;
+}
+
+.board-table th {
+  background-color: #f4f4f9;
+}
+
+.board-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* 게시글 상세페이지 */
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+.post:last-child {
+  border-bottom: none;
+}
+.post-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+.post-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+.post-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+}
+.post-content p {
+  margin: 0; /* 단락 간격 제거 */
+}
+
+/* 글쓰기 페이지 */
+.write-container {
+  max-width: 100%;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.write-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.write-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: solid thin #ccc;
+  border-radius: 5px;
+}
+
+textarea {
+  resize: vertical; /* 세로 크기 조정 가능 */
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: medium;
+  border-radius: 5px;
+  width: 10%;
+}
+
+.submit-btn:hover {
+    background-color:#0056b3 ;
+}
+
+.footer p {
+  justify-content: center; /* 링크들을 중앙 정렬 */
+}
+
+/* 게시글 삭제 이중확인 모달 */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  text-align: center;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-actions button {
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+.modal-actions button:hover {
+  background-color: #FFBB00;
+}

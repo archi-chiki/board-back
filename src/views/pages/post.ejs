@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <%- include('../partials/header') %>
+    <div class="container">
+      <a href="/board/edit/<%= postId %>">
+        <button class="function-btn modify">
+          수정
+        </button>
+      </a>
+      <button class="function-btn delete" onclick="showDeleteModal()">삭제</button>
+      <div class="post">
+        <div class="post-title">
+          <%= postContent[0].subject %>
+        </div>
+        <div class="post-info">
+          [작성자] <%= postContent[0].author.name %> <br>
+            [작성시간] <%= postContent[0].createdAt %>
+        </div>
+        <div class="post-content">
+          <%= postContent[0].content %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <h2>삭제하시겠습니까?</h2>
+        <p>삭제된 게시글은 복구할 수 없습니다.</p>
+        <div class="modal-actions">
+          <button class="confirm-delete" onclick="confirmDelete()">예</button>
+          <button onclick="closeDeleteModal()">아니오</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+
+      <!-- Delete Modal -->
+      <script>
+        function showDeleteModal() {
+          document.getElementById("deleteModal").style.display = "block";
+          document.addEventListener('keydown', function (event) {
+            closeDeleteModal()
+          })
+        }
+
+        // Close the modal
+        function closeDeleteModal() {
+          document.getElementById("deleteModal").style.display = "none";
+        }
+
+        // Confirm delete action
+        function confirmDelete() {
+          fetch('http://<%= SERVER_IP %>:<%= PORT %>/board/delete/<%= postId %>', {
+            method: 'DELETE',
+          })
+            .then(response => {
+              if (response.redirected) {
+                window.location.href = response.url;
+                alert('삭제가 완료되었습니다.')
+                return;
+              }
+              if (!response.ok) {
+                throw new Error('Delete Failed')
+              }
+              return response.json()
+            })
+            .then(data => console.log(('Deleted:', data)))
+            .catch(error => console.log('Error', error))
+
+          closeDeleteModal()
+        }
+      </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <%- include('../partials/header') %>
+
+    <!-- 게시글 작성 UI -->
+    <main class="write-container">
+      <h2>게시글 작성</h2>
+      <form action="/board/write" method="POST" class="write-form">
+
+        <!-- 제목 입력 -->
+        <div class="form-group">
+          <label for="subject">제목</label>
+          <input type="text" id="subject" name="subject" placeholder="제목을 입력하세요" required>
+        </div>
+
+        <!-- 작성자 식별번호 -->
+        <div class="form-group">
+          <label for="authorId">작성자 ID</label>
+          <input type="number" id="authorId" name="authorId" placeholder="ID를 입력하세요" required>
+        </div>
+
+        <!-- 본문 입력 -->
+        <div class="form-group">
+          <label for="content">본문</label>
+          <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+        </div>
+
+        <!-- 작성 버튼 -->
+        <button type="submit" class="submit-btn">작성하기</button>
+      </form>
+    </main>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+</body>
+
+</html>

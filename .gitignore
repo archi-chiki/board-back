@@ -1,0 +1,11 @@
+# 비밀정보
+.env
+
+# 의존성
+node_modules/
+package-lock.json
+
+# 기타
+sample.js
+.DS_Store
+server.js

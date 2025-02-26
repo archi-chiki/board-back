@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <%- include('../partials/header') %>
+
+    <!-- 게시글 작성 UI -->
+    <main class="write-container">
+      <h2>게시글 수정</h2>
+      <form action="/board/edit/<%= postContent[0].id %>" method="POST" class="write-form">
+
+        <!-- 제목 입력 -->
+        <div class="form-group">
+          <label for="subject">제목</label>
+          <input type="text" id="subject" name="subject" value="<%= postContent[0].subject %>" required>
+        </div>
+
+        <!-- 본문 입력 -->
+        <div class="form-group">
+          <label for="content">본문</label>
+          <textarea id="content" name="content" rows="10" required><%= postContent[0].content %></textarea>
+        </div>
+
+        <!-- 수정완료 버튼 -->
+        <button type="submit" class="submit-btn">수정완료</button>
+      </form>
+    </main>
+
+    <!-- Footer -->
+    <%- include('../partials/footer') %>
+</body>
+
+</html>
