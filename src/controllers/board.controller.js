@@ -5,13 +5,19 @@ require("dotenv").config({ path: "../../.env" });
 
 /* 게시글 목록 조회 */
 async function sendAllPosts(req, res) {
-  try {
-    const postData = await boardPostsModel.getAllPosts();
-    console.log(postData);
+  const page = parseInt(req.query.page);
 
-    res.json(postData);
-  } catch (e) {
-    console.error("Error....!:", e);
+  if (Object.keys(req.query).length === 0) {
+    return res.status(400).send({ Error: "페이지 값이 비어있음" });
+  } else {
+    try {
+      const postData = await boardPostsModel.getAllPosts(page);
+
+      console.log(postData);
+      return res.json(postData);
+    } catch (e) {
+      console.error("Error....!:", e);
+    }
   }
 }
 
@@ -42,8 +48,7 @@ async function writePost(req, res) {
       },
     });
     console.log(newPost);
-
-    res.redirect("/board");
+    res.status(200).send({ Status: "게시글 작성 성공" });
   } catch (error) {
     console.error("Error creating post:", error);
     res.status(500).json({ error: "Failed to create post" });
@@ -61,11 +66,17 @@ async function getEditPage(req, res) {
 /* 수정된 게시글 데이터 DB로 전송 */
 function updateEditedData(req, res) {
   const postId = req.params.id;
-  const editedData = req.body;
+  const editedSubject = req.body.subject;
+  const editedContent = req.body.content;
 
-  boardPostsModel.updateEditedData(postId, editedData);
+  boardPostsModel.updateEditedData(postId, editedSubject, editedContent);
 
-  res.redirect(`/board/${postId}`);
+  res.status(200).json({
+    id: postId,
+    subject: editedSubject,
+    content: editedContent,
+    message: "Post updated successfully",
+  });
 }
 
 /* 게시글 삭제 */
