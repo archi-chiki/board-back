@@ -68,11 +68,26 @@ function updateEditedData(req, res) {
   const postId = req.params.id;
   const editedSubject = req.body.subject;
   const editedContent = req.body.content;
+  const editedTime = req.body.createdAt;
+  const authorName = req.body.name;
 
   boardPostsModel.updateEditedData(postId, editedSubject, editedContent);
+  console.log(
+    "+++++++++++",
+    postId,
+    editedSubject,
+    editedContent,
+    editedTime,
+    authorName,
+    "+++++++++++"
+  );
 
   res.status(200).json({
     id: postId,
+    author: {
+      name: authorName,
+    },
+    createdAt: editedTime,
     subject: editedSubject,
     content: editedContent,
     message: "Post updated successfully",
@@ -85,7 +100,7 @@ async function deletePost(req, res) {
   const deletePostReturn = await boardPostsModel.deletePost(postId);
 
   if (deletePostReturn == "Succeed") {
-    res.redirect("/board");
+    res.status(200).send({ Status: "게시글 삭제 성공!" });
   } else {
     res.json({ Status: "Delete Failed" });
   }
