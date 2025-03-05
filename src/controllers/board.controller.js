@@ -100,7 +100,7 @@ async function deletePost(req, res) {
   const deletePostReturn = await boardPostsModel.deletePost(postId);
 
   if (deletePostReturn == "Succeed") {
-    res.status(200).send({ Status: "게시글 삭제 성공!" });
+    res.status(200).send({ postId: postId, status: "Succeeded post delete" });
   } else {
     res.json({ Status: "Delete Failed" });
   }
