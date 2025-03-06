@@ -3,9 +3,16 @@ const prisma = new PrismaClient();
 const boardPostsModel = require("../../models/board.model");
 require("dotenv").config({ path: "../../.env" });
 
+// 디버깅용
+let callCount = 0;
+
 /* 게시글 목록 조회 */
 async function sendAllPosts(req, res) {
   const page = parseInt(req.query.page);
+
+  // 디버깅을 위한 코드
+  callCount += 1;
+  console.log(`//////////////${callCount} 번째 요청입니다. ${page}를 요청하였습니다.//////////////`);
 
   if (Object.keys(req.query).length === 0) {
     return res.status(400).send({ Error: "페이지 값이 비어있음" });
@@ -13,7 +20,7 @@ async function sendAllPosts(req, res) {
     try {
       const postData = await boardPostsModel.getAllPosts(page);
 
-      console.log(postData);
+      // console.log(postData);
       return res.json(postData);
     } catch (e) {
       console.error("Error....!:", e);
