@@ -17,6 +17,17 @@ async function getAllPosts(page) {
               name: true,
             },
           },
+          files: {
+            // 첨부파일 데이터 추가
+            select: {
+              id: true,
+              originalName: true,
+              fileName: true,
+              filePath: false,
+              mimeType: true,
+              size: true,
+            },
+          },
         },
         take: 10, // 가져올 데이터 개수
         skip: offset,
@@ -35,7 +46,6 @@ async function getAllPosts(page) {
       pageInfo: {
         totalCount, // 전체 데이터 개수
         totalPages, // 총 페이지 수
-        // hasNextPage: posts.length === 10, // 다음 페이지 여부
         endCursor, // 다음 요청에서 사용할 커서
       },
     };
@@ -95,6 +105,12 @@ async function updateEditedData(postId, editedSubject, editedContent) {
 
 /* 단일 게시글 삭제 */
 async function deletePost(postId) {
+  await prisma.file.deleteMany({
+    where: {
+      postId: parseInt(postId),
+    },
+  });
+
   await prisma.post.delete({
     where: {
       id: parseInt(postId),

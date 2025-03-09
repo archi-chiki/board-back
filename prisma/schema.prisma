@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://charlie:charlie@127.0.0.1:3306/board"
 }
 
 model User {
@@ -28,4 +28,16 @@ model Post {
   content       String
   author        User?         @relation(fields: [authorId], references: [id])
   createdAt     DateTime      @default(now())
+  files         File[]
+}
+
+model File {
+  id           Int      @id @default(autoincrement())
+  originalName String   
+  fileName     String   
+  filePath     String   
+  mimeType     String   
+  size         Int      
+  postId       Int
+  post         Post     @relation(fields: [postId], references: [id])
 }

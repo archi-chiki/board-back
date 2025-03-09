@@ -4,7 +4,9 @@
 # 의존성
 node_modules/
 package-lock.json
+package.json
 
 # 기타
 sample.js
 .DS_Store
+uploads/

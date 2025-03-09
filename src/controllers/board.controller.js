@@ -1,18 +1,13 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 const boardPostsModel = require("../../models/board.model");
+const path = require("path");
+const fs = require("fs");
+const prisma = new PrismaClient();
 require("dotenv").config({ path: "../../.env" });
-
-// 디버깅용
-let callCount = 0;
 
 /* 게시글 목록 조회 */
 async function sendAllPosts(req, res) {
   const page = parseInt(req.query.page);
-
-  // 디버깅을 위한 코드
-  callCount += 1;
-  console.log(`//////////////${callCount} 번째 요청입니다. ${page}를 요청하였습니다.//////////////`);
 
   if (Object.keys(req.query).length === 0) {
     return res.status(400).send({ Error: "페이지 값이 비어있음" });
@@ -20,7 +15,7 @@ async function sendAllPosts(req, res) {
     try {
       const postData = await boardPostsModel.getAllPosts(page);
 
-      // console.log(postData);
+      console.log(postData);
       return res.json(postData);
     } catch (e) {
       console.error("Error....!:", e);
@@ -44,22 +39,81 @@ function getCreate(req, res) {
 
 /* 게시글 작성 */
 async function writePost(req, res) {
-  const { subject, content, authorId } = req.body;
-
   try {
-    const newPost = await prisma.post.create({
+    // 클라이언트에서 전송된 데이터
+    const { subject, content, authorId = 1 } = req.body;
+    const files = req.files;
+
+    // 업로드된 파일 저장 경로
+    const uploadDir = path.join(__dirname, "../uploads");
+
+    // 디렉토리가 없으면 생성
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    // 게시글 데이터베이스에 저장
+    const post = await prisma.post.create({
       data: {
         subject,
-        authorId: parseInt(authorId),
         content,
+        authorId,
       },
     });
-    console.log(newPost);
-    res.status(200).send({ Status: "게시글 작성 성공" });
+
+    // 파일 저장 로직
+    const savedFiles = [];
+    for (const file of files) {
+      const uniqueFilename = `${Date.now()}-${file.originalname}`; // 고유한 파일 이름 생성
+      const filePath = path.join(uploadDir, uniqueFilename);
+
+      // 파일 저장
+      fs.writeFileSync(filePath, file.buffer);
+
+      // 저장된 파일 정보 기록
+      const savedFile = await prisma.file.create({
+        data: {
+          fileName: uniqueFilename,
+          filePath,
+          originalName: file.originalname,
+          mimeType: file.mimetype,
+          size: file.size,
+          postId: post.id, // 게시글과 연결
+        },
+      });
+
+      savedFiles.push(savedFile);
+    }
+
+    console.log("폼 데이터:", { subject, content });
+    console.log("저장된 파일:", savedFiles);
+
+    // 응답 반환
+    res.status(200).json({
+      message: "게시글과 파일이 성공적으로 업로드되었습니다!",
+      data: {
+        post,
+        files: savedFiles,
+      },
+    });
   } catch (error) {
-    console.error("Error creating post:", error);
-    res.status(500).json({ error: "Failed to create post" });
+    console.error("파일 저장 중 오류 발생:", error);
+    res.status(500).json({ message: "서버 오류가 발생했습니다." });
   }
+}
+
+/* 첨부파일 다운로드 */
+async function getAttachFiles(req, res) {
+  const fileName = req.params.fileName;
+  console.log(fileName);
+  const filePath = path.join(__dirname, "../uploads", fileName);
+
+  res.download(filePath, fileName, (err) => {
+    if (err) {
+      console.log("Error:", err);
+      res.status(500).send({ Status: "파일 다운로드 실패" });
+    }
+  });
 }
 
 /* 게시글 수정 페이지 호출 */
@@ -118,6 +172,7 @@ module.exports = {
   sendOnePost,
   writePost,
   getEditPage,
+  getAttachFiles,
   updateEditedData,
   getCreate,
   deletePost,
