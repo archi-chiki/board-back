@@ -6,19 +6,35 @@ const upload = multer();
 
 // 게시글 리스트 호출
 boardRouter.get("/", boardController.sendAllPosts);
+
 // 글쓰기 호출
 boardRouter.get("/write", boardController.getCreate);
+
+// 댓글 데이터 조회
+boardRouter.get("/:postId/comments", boardController.selectComment);
+
+// 댓글 데이터 전송
+boardRouter.post("/:postId/comments", boardController.createComment);
+
+// 댓글 삭제
+boardRouter.delete("/comments/:commentId", boardController.deleteComment);
+
 // 게시글 상세페이지 호출
-boardRouter.get("/:id", boardController.sendOnePost);
+boardRouter.get("/:postId", boardController.sendOnePost);
+
 // 첨부파일 다운로드
 boardRouter.get("/download/:fileName", boardController.getAttachFiles);
+
 // 게시글 수정페이지 호출
-boardRouter.get("/edit/:id", boardController.getEditPage);
+boardRouter.get("/edit/:postId", boardController.getEditPage);
+
 // 수정 완료된 게시글 데이터 전송
-boardRouter.post("/edit/:id", boardController.updateEditedData);
+boardRouter.post("/edit/:postId", boardController.updateEditedData);
+
 // 게시글 데이터 전송
 boardRouter.post("/write", upload.array("files"), boardController.writePost);
+
 // 게시글 삭제
-boardRouter.delete("/delete/:id", boardController.deletePost);
+boardRouter.delete("/delete/:postId", boardController.deletePost);
 
 module.exports = boardRouter;

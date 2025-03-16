@@ -25,7 +25,7 @@ async function sendAllPosts(req, res) {
 
 /* 게시글 내용 조회 */
 async function sendOnePost(req, res) {
-  const postId = req.params.id;
+  const postId = req.params.postId;
   const postContent = await boardPostsModel.getOnePost(postId);
   console.log(postContent);
 
@@ -104,10 +104,12 @@ async function writePost(req, res) {
 
 /* 첨부파일 다운로드 */
 async function getAttachFiles(req, res) {
+  // 서버에서 UUID 지정하게끔 바꾸셈
   const fileName = req.params.fileName;
   console.log(fileName);
   const filePath = path.join(__dirname, "../uploads", fileName);
 
+  // 이거 걷어내야됨 휴먼;
   res.download(filePath, fileName, (err) => {
     if (err) {
       console.log("Error:", err);
@@ -118,7 +120,7 @@ async function getAttachFiles(req, res) {
 
 /* 게시글 수정 페이지 호출 */
 async function getEditPage(req, res) {
-  const postId = req.params.id;
+  const postId = req.params.postId;
   const postContent = await boardPostsModel.getOnePost(postId);
 
   res.render("pages/edit", { postContent });
@@ -126,7 +128,7 @@ async function getEditPage(req, res) {
 
 /* 수정된 게시글 데이터 DB로 전송 */
 function updateEditedData(req, res) {
-  const postId = req.params.id;
+  const postId = req.params.postId;
   const editedSubject = req.body.subject;
   const editedContent = req.body.content;
   const editedTime = req.body.createdAt;
@@ -157,7 +159,7 @@ function updateEditedData(req, res) {
 
 /* 게시글 삭제 */
 async function deletePost(req, res) {
-  const postId = req.params.id;
+  const postId = req.params.postId;
   const deletePostReturn = await boardPostsModel.deletePost(postId);
 
   if (deletePostReturn == "Succeed") {
@@ -165,6 +167,37 @@ async function deletePost(req, res) {
   } else {
     res.json({ Status: "Delete Failed" });
   }
+}
+
+/* 댓글 작성 */
+async function createComment(req, res) {
+  const postId = req.params.postId;
+  const { content, authorId = 2 } = req.body;
+  const commentData = await boardPostsModel.createComment(
+    postId,
+    authorId,
+    content
+  );
+
+  console.log(commentData);
+
+  res.status(200).send(commentData);
+}
+
+/* 댓글 조회 */
+async function selectComment(req, res) {
+  const postId = req.params.postId;
+  const commentData = await boardPostsModel.selectComment(postId);
+
+  res.json(commentData);
+}
+
+/* 댓글 삭제 */
+async function deleteComment(req, res) {
+  const commentId = req.params.commentId;
+  const deleteRes = await boardPostsModel.deleteComment(commentId);
+
+  res.json(deleteRes);
 }
 
 module.exports = {
@@ -176,4 +209,7 @@ module.exports = {
   updateEditedData,
   getCreate,
   deletePost,
+  createComment,
+  selectComment,
+  deleteComment,
 };

@@ -29,6 +29,9 @@ async function getAllPosts(page) {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
         take: 10, // 가져올 데이터 개수
         skip: offset,
       }),
@@ -59,7 +62,7 @@ async function getAllPosts(page) {
 /* 단일 게시글 내용 조회 */
 async function getOnePost(postId) {
   try {
-    const postData = await prisma.post.findMany({
+    const postData = await prisma.post.findUnique({
       where: {
         id: parseInt(postId),
       },
@@ -73,8 +76,19 @@ async function getOnePost(postId) {
             name: true,
           },
         },
+        files: {
+          select: {
+            id: true,
+            originalName: true,
+            fileName: true,
+            filePath: true,
+            mimeType: true,
+            size: true,
+          },
+        },
       },
     });
+    // console.log(postData);
     return postData;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -111,6 +125,12 @@ async function deletePost(postId) {
     },
   });
 
+  await prisma.comment.deleteMany({
+    where: {
+      postId: parseInt(postId),
+    },
+  });
+
   await prisma.post.delete({
     where: {
       id: parseInt(postId),
@@ -119,9 +139,64 @@ async function deletePost(postId) {
   return "Succeed";
 }
 
+/* 댓글 생성 */
+async function createComment(postId, authorId, content) {
+  const commentData = await prisma.comment.create({
+    data: {
+      postId: parseInt(postId),
+      authorId: parseInt(authorId),
+      content,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return commentData;
+}
+
+/* 댓글 조회 */
+async function selectComment(postId) {
+  const commentData = await prisma.comment.findMany({
+    where: { postId: parseInt(postId) },
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return commentData;
+}
+
+/* 댓글 삭제 */
+async function deleteComment(commentId) {
+  await prisma.comment.delete({
+    where: {
+      id: parseInt(commentId),
+    },
+  });
+
+  return `Post ${commentId} delete succeeded`;
+}
+
 module.exports = {
   getAllPosts,
   getOnePost,
   updateEditedData,
   deletePost,
+  createComment,
+  selectComment,
+  deleteComment,
 };

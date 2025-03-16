@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://charlie:charlie@127.0.0.1:3306/board"
+  url      = "mysql://charlie:p@ssw0rd@127.0.0.1:3306/Board"
 }
 
 model User {
@@ -18,6 +18,7 @@ model User {
   name          String
   email         String        @unique
   posts         Post[]
+  comments      Comment[]
   createdAt     DateTime      @default(now())
 }
 
@@ -29,6 +30,7 @@ model Post {
   author        User?         @relation(fields: [authorId], references: [id])
   createdAt     DateTime      @default(now())
   files         File[]
+  comments      Comment[]
 }
 
 model File {
@@ -40,4 +42,14 @@ model File {
   size         Int      
   postId       Int
   post         Post     @relation(fields: [postId], references: [id])
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  createdAt   DateTime @default(now())
+  authorId    Int?
+  author      User?    @relation(fields: [authorId], references: [id])
+  postId      Int
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
