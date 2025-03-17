@@ -179,6 +179,7 @@ async function createComment(req, res) {
     content
   );
 
+  // 검증용
   console.log(commentData);
 
   res.status(200).send(commentData);
@@ -189,7 +190,24 @@ async function selectComment(req, res) {
   const postId = req.params.postId;
   const commentData = await boardPostsModel.selectComment(postId);
 
+  // 검증용
+  console.log(commentData);
+
   res.json(commentData);
+}
+
+/* 댓글 수정 */
+async function updateComment(req, res) {
+  const { commentId, content } = req.body;
+  const updatedComment = await boardPostsModel.updateComment(
+    commentId,
+    content
+  );
+
+  // 검증용
+  console.log(updatedComment);
+
+  res.status(200).send(updatedComment);
 }
 
 /* 댓글 삭제 */
@@ -211,5 +229,6 @@ module.exports = {
   deletePost,
   createComment,
   selectComment,
+  updateComment,
   deleteComment,
 };

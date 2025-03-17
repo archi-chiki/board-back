@@ -180,6 +180,16 @@ async function selectComment(postId) {
   return commentData;
 }
 
+/* 댓글 수정 */
+async function updateComment(commentId, content) {
+  const updatedComment = await prisma.comment.update({
+    where: { id: parseInt(commentId) },
+    data: { content },
+  });
+
+  return updatedComment;
+}
+
 /* 댓글 삭제 */
 async function deleteComment(commentId) {
   await prisma.comment.delete({
@@ -199,4 +209,5 @@ module.exports = {
   createComment,
   selectComment,
   deleteComment,
+  updateComment,
 };

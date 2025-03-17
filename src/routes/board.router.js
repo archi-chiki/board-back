@@ -19,6 +19,9 @@ boardRouter.post("/:postId/comments", boardController.createComment);
 // 댓글 삭제
 boardRouter.delete("/comments/:commentId", boardController.deleteComment);
 
+// 댓글 수정
+boardRouter.put("/comments/:commentId", boardController.updateComment);
+
 // 게시글 상세페이지 호출
 boardRouter.get("/:postId", boardController.sendOnePost);
 
