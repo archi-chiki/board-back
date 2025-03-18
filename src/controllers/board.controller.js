@@ -42,7 +42,7 @@ async function writePost(req, res) {
   try {
     // 클라이언트에서 전송된 데이터
     const { subject, content, authorId = 1 } = req.body;
-    const files = req.files;
+    const files = req.files || [];
 
     // 업로드된 파일 저장 경로
     const uploadDir = path.join(__dirname, "../uploads");
