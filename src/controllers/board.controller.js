@@ -142,7 +142,7 @@ function updateEditedData(req, res) {
     editedContent,
     editedTime,
     authorName,
-    "+++++++++++"
+    "+++++++++++",
   );
 
   res.status(200).json({
@@ -173,11 +173,7 @@ async function deletePost(req, res) {
 async function createComment(req, res) {
   const postId = req.params.postId;
   const { content, authorId = 2 } = req.body;
-  const commentData = await boardPostsModel.createComment(
-    postId,
-    authorId,
-    content
-  );
+  const commentData = await boardPostsModel.createComment(postId, authorId, content);
 
   // 검증용
   console.log(commentData);
@@ -190,19 +186,14 @@ async function selectComment(req, res) {
   const postId = req.params.postId;
   const commentData = await boardPostsModel.selectComment(postId);
 
-  // 검증용
-  console.log(commentData);
-
+  console.log("--------- 댓글조회 API 호출 시 출력 ---------\n", commentData);
   res.json(commentData);
 }
 
 /* 댓글 수정 */
 async function updateComment(req, res) {
   const { commentId, content } = req.body;
-  const updatedComment = await boardPostsModel.updateComment(
-    commentId,
-    content
-  );
+  const updatedComment = await boardPostsModel.updateComment(commentId, content);
 
   // 검증용
   console.log(updatedComment);
@@ -214,6 +205,8 @@ async function updateComment(req, res) {
 async function deleteComment(req, res) {
   const commentId = req.params.commentId;
   const deleteRes = await boardPostsModel.deleteComment(commentId);
+
+  console.log(deleteRes);
 
   res.json(deleteRes);
 }

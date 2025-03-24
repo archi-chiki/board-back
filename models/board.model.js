@@ -157,7 +157,10 @@ async function createComment(postId, authorId, content) {
     },
   });
 
-  return commentData;
+  return {
+    status: "success",
+    data: commentData,
+  };
 }
 
 /* 댓글 조회 */
@@ -174,6 +177,9 @@ async function selectComment(postId) {
           name: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
@@ -192,13 +198,16 @@ async function updateComment(commentId, content) {
 
 /* 댓글 삭제 */
 async function deleteComment(commentId) {
-  await prisma.comment.delete({
+  const deletedComment = await prisma.comment.delete({
     where: {
       id: parseInt(commentId),
     },
   });
 
-  return `Post ${commentId} delete succeeded`;
+  return {
+    status: "success",
+    data: deletedComment,
+  };
 }
 
 module.exports = {
