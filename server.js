@@ -5,16 +5,15 @@ const path = require("path");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 9000;
-const usersListRouter = require("./src/routes/users.list.router");
-const usersDeleteRouter = require("./src/routes/users.delete.router");
-const usersCreateRouter = require("./src/routes/users.create.router");
 const boardRouter = require("./src/routes/board.router");
+const usersRouter = require("./src/routes/users.router");
+const authRouter = require("./src/routes/auth.router");
 
 // CORS 설정
 app.use(
   cors({
     origin: "*",
-  })
+  }),
 );
 
 // Body parser
@@ -26,15 +25,11 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
 app.use(express.static("public"));
 
-// 메인 페이지
-app.get("/", (req, res) => {
-  res.render("pages/index");
-});
+// 인증 관련 기능
+app.use("/auth", authRouter);
 
 // 사용자 관련 기능
-app.use("/users", usersCreateRouter);
-app.use("/users", usersListRouter);
-app.use("/users", usersDeleteRouter);
+app.use("/users", usersRouter);
 
 // 게시판 관련 기능
 app.use("/board", boardRouter);
