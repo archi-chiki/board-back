@@ -1,13 +1,15 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 // 사용자 추가
 async function userCreate(req, res) {
   const { name, email, user_id, user_password } = req.body;
+  const hashedPassword = await bcrypt.hash(user_password, 10);
 
   try {
     const createUser = await prisma.user.create({
-      data: { name, email, user_id, user_password },
+      data: { name, email, user_id, user_password: hashedPassword },
     });
     res.json(createUser);
   } catch (error) {
